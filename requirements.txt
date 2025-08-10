@@ -1,12 +1,22 @@
-ipykernel
-python-dotenv
-langchain
-langchain-openai
-langchain-groq
-langchain-google-genai
-langchain-core
-langchain-community
-langchain_huggingface
-sentence-transformers
-pypdf
-bs4
+# Core packages with pinned versions for CI compatibility
+ipykernel==6.25.2
+python-dotenv==1.0.0
+
+# LangChain core with pinned versions
+langchain==0.0.352
+langchain-core==0.1.0
+langchain-community==0.0.13
+
+# Lightweight text processing
+pypdf==3.17.4
+bs4==0.0.1
+
+# Optional: Skip torch entirely or use CPU-only version
+# torch==2.1.0+cpu --index-url https://download.pytorch.org/whl/cpu
+
+# Removed heavy packages for CI:
+# - sentence-transformers (large downloads)
+# - langchain_huggingface (heavy dependencies)
+# - langchain-openai (can be added in production)
+# - langchain-groq (can be added in production)
+# - langchain-google-genai (can be added in production)
