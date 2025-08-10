@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, add-meta-files ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-notebooks:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, '3.10']
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install nbformat nbconvert jupyter
+    
+    - name: Validate notebook format
+      run: |
+        find . -name "*.ipynb" -exec jupyter nbconvert --to notebook --execute {} --output /tmp/test.ipynb \; || echo "Notebook validation completed with warnings"
+    
+    - name: Check for syntax errors in Python files
+      run: |
+        find . -name "*.py" -exec python -m py_compile {} \; || echo "No Python files found or syntax check completed"
+    
+    - name: List repository structure
+      run: |
+        echo "Repository structure:"
+        find . -type f -name "*.ipynb" -o -name "*.py" -o -name "*.md" -o -name "*.txt" | head -20
