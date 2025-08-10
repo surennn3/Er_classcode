@@ -1,0 +1,18 @@
+# Lightweight requirements file for CI environments
+# Only essential packages for basic notebook validation and conversion
+
+# Essential packages
+ipykernel==6.25.2
+python-dotenv==1.0.0
+
+# Minimal text processing
+bs4==0.0.1
+
+# For notebook conversion/validation only (no execution)
+# nbconvert is included with ipykernel for basic notebook operations
+
+# Note: Heavy packages excluded for CI speed:
+# - langchain packages (not needed for CI validation)
+# - sentence-transformers
+# - torch/transformers
+# - pypdf (unless specifically testing PDF functionality)
